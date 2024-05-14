@@ -37,8 +37,12 @@ module RedmineZulip
         req.basic_auth(api.email, api.key)
         req["User-Agent"] = "ZulipRedminePlugin/#{RedmineZulip::VERSION}"
         req.set_form_data(form_data)
-        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-          http.request(req)
+        # 2022-07-03 ther client-zertifikate  
+        res = Net::HTTP.start(uri.hostname, uri.port, {:use_ssl => true, 
+            :cert => OpenSSL::X509::Certificate.new(File.read("/usr/local/share/ca-certificates/redmine-zulip-server.crt")),
+            :key =>  OpenSSL::PKey::RSA.new(File.read("/usr/local/share/ca-certificates/redmine-zulip-server.key"))
+            }) do |http| 
+        http.request(req)
         end
         res.code == "200"
       rescue SocketError => e
