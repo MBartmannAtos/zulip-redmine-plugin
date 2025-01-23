@@ -1,4 +1,6 @@
-require "redmine_zulip"
+# require "redmine_zulip"
+# ther sonst gab es Fehler bei Start von RM
+require_relative '/usr/src/redmine/plugins/redmine_zulip/lib/redmine_zulip'
 
 Redmine::Plugin.register :redmine_zulip do
   name 'Zulip'
